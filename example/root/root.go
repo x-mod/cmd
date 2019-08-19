@@ -9,6 +9,7 @@ import (
 func main() {
 	cmd.RootMain(RootMain)
 	cmd.Version("specified version")
+	cmd.PersistentFlags().StringP("argment", "a", "a1", "global argment")
 	cmd.Exit(cmd.Execute())
 }
 

@@ -50,16 +50,17 @@ import (
 )
 
 func main() {
-	svc := cmd.NewCommand(
+	cmd.Add(
 		cmd.Name("svc"),
+		cmd.Short("service short name"),
 		cmd.SubCommand(
 			cmd.NewCommand(
 				cmd.Name("v1"),
+				cmd.Short("version 1"),
 				cmd.Main(V1),
 			),
 		),
 	)
-	cmd.Add(svc)
 	cmd.Version("version string")
 	cmd.Exit(cmd.Execute())
 }

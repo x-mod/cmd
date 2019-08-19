@@ -1,10 +1,12 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/x-mod/errors"
 )
 
@@ -16,8 +18,20 @@ func _program() string {
 }
 
 //Add for default root command
-func Add(c *Command) {
+func Add(opts ...CommandOpt) *Command {
+	c := NewCommand(opts...)
 	rootCmd.Add(c)
+	return c
+}
+
+//PersistentFlags
+func PersistentFlags() *pflag.FlagSet {
+	return rootCmd.PersistentFlags()
+}
+
+//Flags
+func Flags() *pflag.FlagSet {
+	return rootCmd.Flags()
 }
 
 //Version root command
@@ -28,7 +42,7 @@ func Version(v string) {
 //Main root command
 func RootMain(rootFn MainFunc) {
 	rootCmd.Run = func(c *cobra.Command, args []string) {
-		rootFn(rootCmd, args)
+		Exit(rootFn(rootCmd, args))
 	}
 }
 
@@ -40,6 +54,7 @@ func Execute() error {
 //Exit with error code
 func Exit(err error) {
 	if err != nil {
+		fmt.Println("failed: ", err)
 		os.Exit(int(errors.ValueFrom(err)))
 	}
 }

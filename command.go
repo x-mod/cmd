@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
@@ -46,6 +47,16 @@ func (c *Command) Add(sub *Command) {
 	c.Command.Run = nil
 }
 
+//PersistentFlags
+func (c *Command) PersistentFlags() *pflag.FlagSet {
+	return c.Command.PersistentFlags()
+}
+
+//Flags
+func (c *Command) Flags() *pflag.FlagSet {
+	return c.Command.Flags()
+}
+
 //Execute command
 func (c *Command) Execute() error {
 	if err := viper.BindPFlags(c.Flags()); err != nil {
@@ -79,13 +90,13 @@ func Description(desc string) CommandOpt {
 }
 
 //MainFunc type
-type MainFunc func(cmd *Command, args []string)
+type MainFunc func(cmd *Command, args []string) error
 
 //Main of command
 func Main(main MainFunc) CommandOpt {
 	return func(cmd *Command) {
 		cmd.Command.Run = func(c *cobra.Command, args []string) {
-			main(cmd, args)
+			Exit(main(cmd, args))
 		}
 	}
 }
