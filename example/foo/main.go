@@ -23,6 +23,7 @@ func main() {
 	cmd.Exit(cmd.Execute())
 }
 
-func V1(c *cmd.Command, args []string) {
+func V1(c *cmd.Command, args []string) error {
 	fmt.Println("V1 called", filepath.Base(os.Args[0]))
+	return nil
 }

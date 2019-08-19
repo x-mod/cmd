@@ -13,6 +13,7 @@ func main() {
 	cmd.Exit(cmd.Execute())
 }
 
-func RootMain(c *cmd.Command, args []string) {
+func RootMain(c *cmd.Command, args []string) error {
 	fmt.Println("my root command running ...")
+	return nil
 }
