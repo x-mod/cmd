@@ -9,5 +9,6 @@ import (
 
 func main() {
 	cmd.Version(build.String())
+	cmd.Add(cmd.Name("cmd"))
 	cmd.Execute()
 }

@@ -45,7 +45,19 @@ func newCommand(opts ...CommandOpt) *Command {
 func (c *Command) build() {
 	//replace rootCmd
 	if c.dir == "" {
-		rootCmd = c
+		if c.name != "" {
+			rootCmd.name = c.name
+			rootCmd.Command.Use = c.name
+		}
+		if c.Command.Short != "" {
+			rootCmd.Command.Short = c.Command.Short
+		}
+		if c.Command.Long != "" {
+			rootCmd.Command.Long = c.Command.Long
+		}
+		if len(rootCmd.childs) == 0 {
+			rootCmd.Command.Run = c.Command.Run
+		}
 		return
 	}
 	parent := rootCmd
