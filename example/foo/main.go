@@ -2,28 +2,21 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 
 	"github.com/x-mod/cmd"
 )
 
 func main() {
 	cmd.Add(
-		cmd.Name("svc"),
-		cmd.Short("service short name"),
-		cmd.SubCommand(
-			cmd.NewCommand(
-				cmd.Name("v1"),
-				cmd.Main(V1),
-			),
-		),
-	)
+		cmd.Parent("/service/foo/bar"),
+		cmd.Name("v1"),
+		cmd.Main(V1),
+	).PersistentFlags().StringP("parameter", "p", "test", "flags usage")
 	cmd.Version("version string")
-	cmd.Exit(cmd.Execute())
+	cmd.Execute()
 }
 
 func V1(c *cmd.Command, args []string) error {
-	fmt.Println("V1 called", filepath.Base(os.Args[0]))
+	fmt.Println("V1 called")
 	return nil
 }

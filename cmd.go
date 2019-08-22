@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/x-mod/errors"
 )
@@ -19,8 +18,8 @@ func _program() string {
 
 //Add for default root command
 func Add(opts ...CommandOpt) *Command {
-	c := NewCommand(opts...)
-	rootCmd.Add(c)
+	c := newCommand(opts...)
+	c.build()
 	return c
 }
 
@@ -39,16 +38,9 @@ func Version(v string) {
 	rootCmd.Version = v
 }
 
-//Main root command
-func RootMain(rootFn MainFunc) {
-	rootCmd.Run = func(c *cobra.Command, args []string) {
-		Exit(rootFn(rootCmd, args))
-	}
-}
-
 //Execute for default root command
-func Execute() error {
-	return rootCmd.Execute()
+func Execute() {
+	Exit(rootCmd.Execute())
 }
 
 //Exit with error code
@@ -60,6 +52,6 @@ func Exit(err error) {
 }
 
 func init() {
-	rootCmd = NewCommand(Name(_program()))
+	rootCmd = newCommand(Name(_program()))
 	rootCmd.TraverseChildren = true
 }

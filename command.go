@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"path"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -18,16 +20,20 @@ type CommandOpt func(*Command)
 //Command struct
 type Command struct {
 	*cobra.Command
-	childs []*Command
+	dir    string
+	name   string
+	parent *Command
+	childs map[string]*Command
 }
 
-//NewCommand create a new command
-func NewCommand(opts ...CommandOpt) *Command {
+//create a new command
+func newCommand(opts ...CommandOpt) *Command {
 	cmd := &Command{
 		Command: &cobra.Command{
 			Run: _default,
 		},
-		childs: []*Command{},
+		parent: nil,
+		childs: make(map[string]*Command),
 	}
 	for _, opt := range opts {
 		opt(cmd)
@@ -35,16 +41,37 @@ func NewCommand(opts ...CommandOpt) *Command {
 	return cmd
 }
 
-//Add subcommand
-func (c *Command) Add(sub *Command) {
-	for _, v := range c.childs {
-		if v.Use == sub.Use {
-			return
+//build relations
+func (c *Command) build() {
+	//replace rootCmd
+	if c.dir == "" {
+		rootCmd = c
+		return
+	}
+	parent := rootCmd
+	if c.dir != "/" {
+		dirs := strings.Split(strings.TrimPrefix(c.dir, "/"), "/")
+		for _, d := range dirs {
+			if ci, ok := parent.childs[d]; ok {
+				parent = ci
+			} else {
+				nc := newCommand(
+					Name(d),
+					Short(fmt.Sprintf("%s command", d)),
+				)
+				nc.parent = parent
+				nc.dir = path.Join(nc.parent.dir, nc.parent.name)
+				parent.Command.Run = nil
+				parent.AddCommand(nc.Command)
+				parent.childs[d] = nc
+				parent = nc
+			}
 		}
 	}
-	c.childs = append(c.childs, sub)
-	c.Command.AddCommand(sub.Command)
-	c.Command.Run = nil
+	c.parent = parent
+	c.parent.Command.Run = nil
+	c.parent.AddCommand(c.Command)
+	c.parent.childs[c.name] = c
 }
 
 //PersistentFlags
@@ -68,9 +95,17 @@ func (c *Command) Execute() error {
 	return c.Command.Execute()
 }
 
+//Parent of command
+func Parent(parent string) CommandOpt {
+	return func(cmd *Command) {
+		cmd.dir = parent
+	}
+}
+
 //Name of command
 func Name(name string) CommandOpt {
 	return func(cmd *Command) {
+		cmd.name = name
 		cmd.Command.Use = name
 	}
 }
@@ -98,12 +133,5 @@ func Main(main MainFunc) CommandOpt {
 		cmd.Command.Run = func(c *cobra.Command, args []string) {
 			Exit(main(cmd, args))
 		}
-	}
-}
-
-//SubCommand of command
-func SubCommand(sub *Command) CommandOpt {
-	return func(cmd *Command) {
-		cmd.Add(sub)
 	}
 }

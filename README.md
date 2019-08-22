@@ -1,6 +1,8 @@
 cmd
 ===
-More convenient commands builder base on **Cobra**.
+More convenient commands builder base on **Cobra**.The key feature of the package:
+
+-  use filesystem path like format to route the subcommands
 
 ## Installation
 
@@ -16,56 +18,73 @@ $: go get github.com/x-mod/cmd
 
 ### Only Root Command
 
-````go
-package main
-
-import (
-	"fmt"
-
-	"github.com/x-mod/cmd"
-)
-
-func main() {
-    cmd.RootMain(RootMain)
-    cmd.Version("specified version")
-	cmd.Exit(cmd.Execute())
-}
-
-func RootMain(c *cmd.Command, args []string) {
-	fmt.Println("my root command running ...")
-}
-````
-
-### Sub Commands
+replace default Root Command settings. `cmd.Parent("")` means replace the default Root Command with the new command.
 
 ````go
-package main
-
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 
 	"github.com/x-mod/cmd"
 )
 
 func main() {
 	cmd.Add(
-		cmd.Name("svc"),
-		cmd.Short("service short name"),
-		cmd.SubCommand(
-			cmd.NewCommand(
-				cmd.Name("v1"),
-				cmd.Short("version 1"),
-				cmd.Main(V1),
-			),
-		),
+		cmd.Name("root"),
+		cmd.Main(Main),
 	)
-	cmd.Version("version string")
-	cmd.Exit(cmd.Execute())
+	cmd.Execute()
 }
 
-func V1(c *cmd.Command, args []string) {
-	fmt.Println("V1 called", filepath.Base(os.Args[0]))
+func Main(c *cmd.Command, args []string) error {
+	fmt.Println("my root command running ...")
+	return nil
 }
 ````
+
+run the code in bash:
+
+````bash
+$: go run main.go
+my root command running ...
+````
+
+### Sub Commands
+
+sub commands routing rules:
+
+- `cmd.Parent("/")`  level 1
+- `cmd.Parent("/foo/bar")` level 3
+
+subcommand's `cmd.Parent()` must be setting.
+
+````go
+import (
+	"fmt"
+
+	"github.com/x-mod/cmd"
+)
+
+func main() {
+	cmd.Add(
+		cmd.Parent("/foo/bar"),
+		cmd.Name("v1"),
+		cmd.Main(V1),
+	).PersistentFlags().StringP("parameter", "p", "test", "flags usage")
+	cmd.Version("version string")
+	cmd.Execute()
+}
+
+func V1(c *cmd.Command, args []string) error {
+	fmt.Println("V1 called")
+	return nil
+}
+````
+
+run the code in bash:
+
+````bash
+$: go run main.go foo bar v1
+V1 called
+````
+
+
