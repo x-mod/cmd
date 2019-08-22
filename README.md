@@ -55,7 +55,7 @@ sub commands routing rules:
 - `cmd.Parent("/")`  level 1
 - `cmd.Parent("/foo/bar")` level 3
 
-subcommand's `cmd.Parent()` must be setting.
+subcommand's `cmd.Parent("/command/path")` must be setting.
 
 ````go
 import (
