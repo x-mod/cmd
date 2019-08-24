@@ -8,8 +8,7 @@ import (
 
 func main() {
 	cmd.Add(
-		cmd.Parent("/service/foo/bar"),
-		cmd.Name("v1"),
+		cmd.Path("/foo/bar/v1"),
 		cmd.Main(V1),
 	).PersistentFlags().StringP("parameter", "p", "test", "flags usage")
 	cmd.Version("version string")

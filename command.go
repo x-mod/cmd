@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -67,10 +68,8 @@ func (c *Command) build() {
 			if ci, ok := parent.childs[d]; ok {
 				parent = ci
 			} else {
-				nc := newCommand(
-					Name(d),
-					Short(fmt.Sprintf("%s command", d)),
-				)
+				nc := newCommand()
+				nc.setName(d)
 				nc.parent = parent
 				nc.dir = path.Join(nc.parent.dir, nc.parent.name)
 				parent.Command.Run = nil
@@ -105,6 +104,28 @@ func (c *Command) Execute() error {
 		return err
 	}
 	return c.Command.Execute()
+}
+
+//Path of command
+func Path(p string) CommandOpt {
+	return func(cmd *Command) {
+		if len(p) > 0 {
+			if p == "/" {
+				cmd.dir = ""
+				cmd.setName(_program())
+			} else {
+				dir, name := filepath.Split(p)
+				cmd.dir = strings.TrimSuffix(dir, "/")
+				cmd.setName(name)
+			}
+		}
+	}
+}
+
+func (cmd *Command) setName(name string) {
+	cmd.name = name
+	cmd.Command.Use = name
+	cmd.Command.Short = fmt.Sprintf("%s command", name)
 }
 
 //Parent of command
