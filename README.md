@@ -52,8 +52,8 @@ my root command running ...
 
 sub commands routing rules:
 
-- `cmd.Parent("/")`  level 1
-- `cmd.Parent("/foo/bar")` level 3
+- `cmd.Path("/")`  root command
+- `cmd.Parent("/foo/bar")` 3 level command
 
 subcommand's `cmd.Parent("/command/path")` must be setting.
 
@@ -66,8 +66,7 @@ import (
 
 func main() {
 	cmd.Add(
-		cmd.Parent("/foo/bar"),
-		cmd.Name("v1"),
+		cmd.Path("/foo/bar/v1"),
 		cmd.Main(V1),
 	).PersistentFlags().StringP("parameter", "p", "test", "flags usage")
 	cmd.Version("version string")
