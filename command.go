@@ -115,7 +115,10 @@ func Path(p string) CommandOpt {
 				cmd.setName(_program())
 			} else {
 				dir, name := filepath.Split(p)
-				cmd.dir = strings.TrimSuffix(dir, "/")
+				cmd.dir = dir
+				if dir != "/" {
+					cmd.dir = strings.TrimSuffix(dir, "/")
+				}
 				cmd.setName(name)
 			}
 		}
