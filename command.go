@@ -103,6 +103,14 @@ func (c *Command) Execute() error {
 	if err := viper.BindPFlags(c.PersistentFlags()); err != nil {
 		return err
 	}
+	for _, child := range c.childs {
+		if err := viper.BindPFlags(child.Flags()); err != nil {
+			return err
+		}
+		if err := viper.BindPFlags(child.PersistentFlags()); err != nil {
+			return err
+		}
+	}
 	return c.Command.Execute()
 }
 

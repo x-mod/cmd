@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/spf13/viper"
 	"github.com/x-mod/cmd"
 )
 
@@ -16,6 +17,6 @@ func main() {
 }
 
 func V1(c *cmd.Command, args []string) error {
-	fmt.Println("V1 called")
+	fmt.Println("V1 called, parameter:", viper.GetString("parameter"))
 	return nil
 }
