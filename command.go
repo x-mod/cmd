@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"flag"
 	"fmt"
 	"path"
 	"path/filepath"
@@ -111,6 +112,8 @@ func (c *Command) Execute() error {
 			return err
 		}
 	}
+	//add flag parse
+	flag.Parse()
 	return c.Command.Execute()
 }
 

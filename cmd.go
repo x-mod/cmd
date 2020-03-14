@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -40,6 +41,8 @@ func Version(v string) {
 
 //Execute for default root command
 func Execute() {
+	//add flag commandLine to support glog
+	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 	Exit(rootCmd.Execute())
 }
 
