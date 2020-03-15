@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"flag"
 	"fmt"
 	"path"
 	"path/filepath"
@@ -13,7 +12,7 @@ import (
 )
 
 func _default(c *cobra.Command, args []string) {
-	fmt.Println("default called")
+	fmt.Println("default called with args:", args)
 }
 
 //CommandOpt command option definition
@@ -112,8 +111,6 @@ func (c *Command) Execute() error {
 			return err
 		}
 	}
-	//add flag parse
-	flag.Parse()
 	return c.Command.Execute()
 }
 
@@ -178,7 +175,7 @@ type MainFunc func(cmd *Command, args []string) error
 func Main(main MainFunc) CommandOpt {
 	return func(cmd *Command) {
 		cmd.Command.Run = func(c *cobra.Command, args []string) {
-			Exit(main(cmd, args))
+			exit(main(cmd, args))
 		}
 	}
 }

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"flag"
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -12,6 +11,7 @@ import (
 
 //default root command
 var rootCmd *Command
+var glogParse bool
 
 func _program() string {
 	return filepath.Base(os.Args[0])
@@ -39,17 +39,23 @@ func Version(v string) {
 	rootCmd.Version = v
 }
 
+//GLOG support
+func GLOG() {
+	glogParse = true
+}
+
 //Execute for default root command
 func Execute() {
 	//add flag commandLine to support glog
-	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
-	Exit(rootCmd.Execute())
+	if glogParse {
+		pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
+		flag.Parse()
+	}
+	exit(rootCmd.Execute())
 }
 
-//Exit with error code
-func Exit(err error) {
+func exit(err error) {
 	if err != nil {
-		fmt.Println("failed: ", err)
 		os.Exit(int(errors.ValueFrom(err)))
 	}
 }
@@ -57,4 +63,5 @@ func Exit(err error) {
 func init() {
 	rootCmd = newCommand(Name(_program()))
 	rootCmd.TraverseChildren = true
+	glogParse = false
 }
