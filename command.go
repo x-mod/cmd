@@ -1,10 +1,13 @@
 package cmd
 
 import (
+	"flag"
 	"fmt"
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/golang/glog"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -175,6 +178,11 @@ type MainFunc func(cmd *Command, args []string) error
 func Main(main MainFunc) CommandOpt {
 	return func(cmd *Command) {
 		cmd.Command.Run = func(c *cobra.Command, args []string) {
+			if bGLOG {
+				defer glog.Flush()
+				flag.Parse()
+				exit(main(cmd, args))
+			}
 			exit(main(cmd, args))
 		}
 	}

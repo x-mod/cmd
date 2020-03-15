@@ -19,7 +19,7 @@ func main() {
 }
 
 func V1(c *cmd.Command, args []string) error {
-	defer glog.Flush()
+	// defer glog.Flush()
 	glog.MaxSize = 256
 	glog.Info("begin ... vlog")
 	for i := 0; i < 16; i++ {
