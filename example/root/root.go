@@ -11,8 +11,7 @@ func main() {
 	cmd.Add(
 		cmd.Name("root"),
 		cmd.Main(RootMain),
-	)
-	cmd.PersistentFlags().StringP("parameter", "p", "test", "flags usage")
+	).PersistentFlags().StringP("parameter", "p", "test", "flags usage")
 	cmd.Execute()
 }
 

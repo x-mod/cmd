@@ -1,21 +1,16 @@
 package cmd
 
 import (
-	"flag"
 	"os"
 	"path/filepath"
 
-	"github.com/golang/glog"
-
 	"github.com/spf13/pflag"
 	"github.com/x-mod/errors"
+	"github.com/x-mod/glog"
 )
 
 //default root command
 var rootCmd *Command
-
-//glog bool flag
-var bGLOG bool
 
 func _program() string {
 	return filepath.Base(os.Args[0])
@@ -25,6 +20,9 @@ func _program() string {
 func Add(opts ...CommandOpt) *Command {
 	c := newCommand(opts...)
 	c.build()
+	if c.parent == nil {
+		return rootCmd
+	}
 	return c
 }
 
@@ -43,22 +41,14 @@ func Version(v string) {
 	rootCmd.Version = v
 }
 
-//GLOG support
-func GLOG() {
-	bGLOG = true
-}
-
 //Execute for default root command
 func Execute() {
-	if bGLOG {
-		pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
-	}
 	exit(rootCmd.Execute())
 }
 
 func exit(err error) {
 	if err != nil {
-		glog.Error("executed: ", err)
+		glog.Error("failed: ", err)
 	}
 	os.Exit(int(errors.ValueFrom(err)))
 }
@@ -66,5 +56,4 @@ func exit(err error) {
 func init() {
 	rootCmd = newCommand(Name(_program()))
 	rootCmd.TraverseChildren = true
-	bGLOG = false
 }

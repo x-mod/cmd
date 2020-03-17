@@ -1,13 +1,10 @@
 package cmd
 
 import (
-	"flag"
 	"fmt"
 	"path"
 	"path/filepath"
 	"strings"
-
-	"github.com/golang/glog"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -36,6 +33,7 @@ func newCommand(opts ...CommandOpt) *Command {
 		Command: &cobra.Command{
 			Run: _default,
 		},
+		dir:    "/",
 		parent: nil,
 		childs: make(map[string]*Command),
 	}
@@ -48,7 +46,7 @@ func newCommand(opts ...CommandOpt) *Command {
 //build relations
 func (c *Command) build() {
 	//replace rootCmd
-	if c.dir == "" {
+	if c.dir == "/" {
 		if c.name != "" {
 			rootCmd.name = c.name
 			rootCmd.Command.Use = c.name
@@ -178,11 +176,6 @@ type MainFunc func(cmd *Command, args []string) error
 func Main(main MainFunc) CommandOpt {
 	return func(cmd *Command) {
 		cmd.Command.Run = func(c *cobra.Command, args []string) {
-			if bGLOG {
-				defer glog.Flush()
-				flag.Parse()
-				exit(main(cmd, args))
-			}
 			exit(main(cmd, args))
 		}
 	}

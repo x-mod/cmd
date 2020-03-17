@@ -110,6 +110,8 @@ github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5/go.mod h1
 github.com/ugorji/go v1.1.4/go.mod h1:uQMGLiO92mf5W77hV/PUCpI3pbzQx3CRekS0kk+RGrc=
 github.com/x-mod/errors v0.2.3 h1:vLoKfXC1H25HcfsDFEyZNM5aBRqEL6veh1XdnHQ71n4=
 github.com/x-mod/errors v0.2.3/go.mod h1:Py3a5cvFx2w8QfqPFu1w6bt0czGdkzkfWzAbSbRQpTg=
+github.com/x-mod/glog v0.1.0 h1:kJUHAyu961by/4vwZa85Fz63zW88NhZ0e+Up8y/oot8=
+github.com/x-mod/glog v0.1.0/go.mod h1:rzc2D8wjK/pk0Am7BXG4BMRubhobeRpz0BvnE7gdu5s=
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=

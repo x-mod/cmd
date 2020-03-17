@@ -1,6 +1,6 @@
 package m
 
-import "github.com/golang/glog"
+import "github.com/x-mod/glog"
 
 func Foo(i int) {
 	glog.Info("foo info .... helo", i)

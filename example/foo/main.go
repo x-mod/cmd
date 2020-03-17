@@ -3,13 +3,13 @@ package main
 import (
 	"fmt"
 
-	"github.com/golang/glog"
+	"github.com/spf13/viper"
 	"github.com/x-mod/cmd"
 	"github.com/x-mod/cmd/example/foo/m"
+	"github.com/x-mod/glog"
 )
 
 func main() {
-	cmd.GLOG()
 	cmd.Add(
 		cmd.Path("/foo"),
 		cmd.Main(V1),
@@ -19,7 +19,11 @@ func main() {
 }
 
 func V1(c *cmd.Command, args []string) error {
-	// defer glog.Flush()
+	glog.Open(
+		glog.LogToStderr(true),
+	)
+	defer glog.Close()
+	glog.Infoln("parameter:", viper.GetString("parameter"))
 	glog.MaxSize = 256
 	glog.Info("begin ... vlog")
 	for i := 0; i < 16; i++ {
