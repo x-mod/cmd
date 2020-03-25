@@ -33,7 +33,6 @@ func newCommand(opts ...CommandOpt) *Command {
 		Command: &cobra.Command{
 			Run: _default,
 		},
-		dir:    "/",
 		parent: nil,
 		childs: make(map[string]*Command),
 	}
@@ -46,7 +45,7 @@ func newCommand(opts ...CommandOpt) *Command {
 //build relations
 func (c *Command) build() {
 	//replace rootCmd
-	if c.dir == "/" {
+	if c.dir == "" {
 		if c.name != "" {
 			rootCmd.name = c.name
 			rootCmd.Command.Use = c.name
