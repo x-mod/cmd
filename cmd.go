@@ -6,7 +6,6 @@ import (
 
 	"github.com/spf13/pflag"
 	"github.com/x-mod/errors"
-	"github.com/x-mod/glog"
 )
 
 //default root command
@@ -47,9 +46,6 @@ func Execute() {
 }
 
 func exit(err error) {
-	if err != nil {
-		glog.Error("failed: ", err)
-	}
 	os.Exit(int(errors.ValueFrom(err)))
 }
 
