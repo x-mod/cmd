@@ -10,6 +10,7 @@ import (
 
 //default root command
 var rootCmd *Command
+var exitCode bool
 
 func _program() string {
 	return filepath.Base(os.Args[0])
@@ -40,9 +41,17 @@ func Version(v string) {
 	rootCmd.Version = v
 }
 
+//ExitCode
+func ExitCode(enable bool) {
+	exitCode = enable
+}
+
 //Execute for default root command
 func Execute() {
-	exit(rootCmd.Execute())
+	if exitCode {
+		exit(rootCmd.Execute())
+	}
+	rootCmd.Execute()
 }
 
 func exit(err error) {
@@ -52,4 +61,5 @@ func exit(err error) {
 func init() {
 	rootCmd = newCommand(Name(_program()))
 	rootCmd.TraverseChildren = true
+	exitCode = false
 }

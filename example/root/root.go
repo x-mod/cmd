@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	cmd.ExitCode(true)
 	cmd.Add(
 		cmd.Name("root"),
 		cmd.Main(RootMain),
@@ -17,5 +18,5 @@ func main() {
 
 func RootMain(c *cmd.Command, args []string) error {
 	fmt.Println("my root command running ...parameter:", viper.GetString("parameter"))
-	return nil
+	return fmt.Errorf("error return")
 }
