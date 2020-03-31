@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -48,16 +49,18 @@ func ExitCode(enable bool) {
 
 //Execute for default root command
 func Execute() {
-	if exitCode {
-		exit(rootCmd.Execute())
-	}
-	rootCmd.Execute()
+	exit(rootCmd.Execute())
 }
 
 func exit(err error) {
-	os.Exit(int(errors.ValueFrom(err)))
+	if err != nil {
+		fmt.Println("failed:", err)
+		if exitCode {
+			os.Exit(int(errors.ValueFrom(err)))
+		}
+	}
+	os.Exit(0)
 }
-
 func init() {
 	rootCmd = newCommand(Name(_program()))
 	rootCmd.TraverseChildren = true
