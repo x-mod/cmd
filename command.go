@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
@@ -85,18 +84,7 @@ func (c *Command) build() {
 	c.parent.childs[c.name] = c
 }
 
-//PersistentFlags
-func (c *Command) PersistentFlags() *pflag.FlagSet {
-	return c.Command.PersistentFlags()
-}
-
-//Flags
-func (c *Command) Flags() *pflag.FlagSet {
-	return c.Command.Flags()
-}
-
-//Execute command
-func (c *Command) Execute() error {
+func (c *Command) bind() error {
 	if err := viper.BindPFlags(c.Flags()); err != nil {
 		return err
 	}
@@ -104,12 +92,17 @@ func (c *Command) Execute() error {
 		return err
 	}
 	for _, child := range c.childs {
-		if err := viper.BindPFlags(child.Flags()); err != nil {
+		if err := child.bind(); err != nil {
 			return err
 		}
-		if err := viper.BindPFlags(child.PersistentFlags()); err != nil {
-			return err
-		}
+	}
+	return nil
+}
+
+//Execute command
+func (c *Command) Execute() error {
+	if err := c.bind(); err != nil {
+		return err
 	}
 	return c.Command.Execute()
 }
