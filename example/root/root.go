@@ -17,6 +17,7 @@ func main() {
 }
 
 func RootMain(c *cmd.Command, args []string) error {
+	fmt.Println("$HOME=", viper.GetString("HOME"))
 	fmt.Println("my root command running ...parameter:", viper.GetString("parameter"))
 	return fmt.Errorf("error return")
 }

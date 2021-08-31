@@ -16,7 +16,7 @@ func Foo(i int) {
 
 func init() {
 	c := cmd.Add(
-		cmd.Path("/foo"),
+		cmd.Path("/bar"),
 		cmd.Main(V1),
 	)
 	c.Flags().StringP("parameter", "p", "test", "flags usage")
@@ -29,6 +29,5 @@ func V1(c *cmd.Command, args []string) error {
 	defer glog.Close()
 	glog.Infoln("query:", viper.GetString("query"))
 	glog.Infoln("parameter:", viper.GetString("parameter"))
-	glog.MaxSize = 256
 	return fmt.Errorf("error result")
 }

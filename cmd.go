@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 	"github.com/x-mod/errors"
 )
 
@@ -49,6 +50,7 @@ func ExitCode(enable bool) {
 
 //Execute for default root command
 func Execute() {
+	viper.AutomaticEnv()
 	exit(rootCmd.Execute())
 }
 

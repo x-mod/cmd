@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/x-mod/cmd"
 
+	_ "github.com/x-mod/cmd/example/foo/b"
 	_ "github.com/x-mod/cmd/example/foo/m"
 )
 
